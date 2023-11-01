@@ -100,7 +100,7 @@ app.post('/api/form', upload.fields([{ name: 'image' }, { name: 'signature' }]),
 //Get user data using registration
 const fs = require('fs');
 
-app.get(`${BASE_URL}/api/:registrationNumber`, async (req, res) => {
+app.get('/api/:registrationNumber', async (req, res) => {
   const { registrationNumber } = req.params;
 
   try {
