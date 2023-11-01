@@ -7,14 +7,13 @@ const multer = require('multer'); // For handling file uploads
 const modifyPdf = require('./modifyPdf');
 const { Buffer } = require('buffer');
 require('dotenv').config();
-const BASE_URL = process.env.BASE_URL;
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.URL;
 // const MONGODB_URI = "mongodb+srv://shraddhasehrawat505:Bashir@mafec-db.xolgkb6.mongodb.net/";
 
-// app.use(express.json())
+app.use(express.json())
 app.use(cors());
 app.use(bodyParser.json());
 
@@ -55,7 +54,7 @@ const generateRegistrationNumber = () => {
 
 
 
-app.post(`${BASE_URL}/api/form`, upload.fields([{ name: 'image' }, { name: 'signature' }]), async (req, res) => {
+app.post('/api/form', upload.fields([{ name: 'image' }, { name: 'signature' }]), async (req, res) => {
   try {
     // Handle the first image
     const imageBuffer = req.files['image'][0].buffer;
@@ -100,7 +99,7 @@ app.post(`${BASE_URL}/api/form`, upload.fields([{ name: 'image' }, { name: 'sign
 //Get user data using registration
 const fs = require('fs');
 
-app.get(`${BASE_URL}/api/:registrationNumber`, async (req, res) => {
+app.get('/api/:registrationNumber', async (req, res) => {
   const { registrationNumber } = req.params;
 
   try {
