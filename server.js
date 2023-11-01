@@ -7,7 +7,7 @@ const multer = require('multer'); // For handling file uploads
 const modifyPdf = require('./modifyPdf');
 const { Buffer } = require('buffer');
 require('dotenv').config();
-
+const BASE_URL = process.env.BASE_URL;
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -55,7 +55,7 @@ const generateRegistrationNumber = () => {
 
 
 
-app.post('/api/form', upload.fields([{ name: 'image' }, { name: 'signature' }]), async (req, res) => {
+app.post(`${BASE_URL}/api/form`, upload.fields([{ name: 'image' }, { name: 'signature' }]), async (req, res) => {
   try {
     // Handle the first image
     const imageBuffer = req.files['image'][0].buffer;
@@ -100,7 +100,7 @@ app.post('/api/form', upload.fields([{ name: 'image' }, { name: 'signature' }]),
 //Get user data using registration
 const fs = require('fs');
 
-app.get('/api/:registrationNumber', async (req, res) => {
+app.get(`${BASE_URL}/api/:registrationNumber`, async (req, res) => {
   const { registrationNumber } = req.params;
 
   try {
