@@ -130,7 +130,7 @@ app.get(`${BASE_URL}/api/:registrationNumber`, async (req, res) => {
   }
 });
 
-app.get('/api/form/:registrationNumber', async (req, res) =>{
+app.get(`${BASE_URL}/api/form/:registrationNumber`, async (req, res) =>{
 
     const {registrationNumber} = req.params;
     try {
