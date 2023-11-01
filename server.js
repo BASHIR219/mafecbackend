@@ -55,7 +55,7 @@ const generateRegistrationNumber = () => {
 
 
 
-app.post(`${BASE_URL}/api/form`, upload.fields([{ name: 'image' }, { name: 'signature' }]), async (req, res) => {
+app.post('/api/form', upload.fields([{ name: 'image' }, { name: 'signature' }]), async (req, res) => {
   try {
     // Handle the first image
     const imageBuffer = req.files['image'][0].buffer;
@@ -130,7 +130,7 @@ app.get(`${BASE_URL}/api/:registrationNumber`, async (req, res) => {
   }
 });
 
-app.get(`${BASE_URL}/api/form/:registrationNumber`, async (req, res) =>{
+app.get('/api/form/:registrationNumber', async (req, res) =>{
 
     const {registrationNumber} = req.params;
     try {
