@@ -2,14 +2,14 @@
     "version": 2,
     "builds": [
         {
-            "src":"*.js",
-            "use":"@varsel/node"
+            "src": "*.js",
+            "use": "@vercel/node"
         }
     ],
-    "routes":[
+    "routes": [
         {
-            "src":"/(.*)",
-            "dest":"/"
+            "src": "/(.*)",
+            "dest": "/"
         }
     ]
 }
