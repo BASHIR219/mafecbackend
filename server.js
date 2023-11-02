@@ -14,7 +14,13 @@ const MONGODB_URI = process.env.URL;
 // const MONGODB_URI = "mongodb+srv://shraddhasehrawat505:Bashir@mafec-db.xolgkb6.mongodb.net/";
 
 app.use(express.json())
-app.use(cors());
+app.use(cors(
+  {
+    origin:["https://mafecbackend.vercel.app/"],
+    method:["POST", "GET"],
+    credential:true
+  }
+));
 app.use(bodyParser.json());
 
 mongoose.connect(MONGODB_URI, {
