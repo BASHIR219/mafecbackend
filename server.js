@@ -4,14 +4,13 @@ const UserData = require('./schema'); // Importing the Mongoose model
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const multer = require('multer'); // For handling file uploads
-const modifyPdf = require('./modifyPdf');
 const { Buffer } = require('buffer');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.URL;
-// const MONGODB_URI = "mongodb+srv://shraddhasehrawat505:Bashir@mafec-db.xolgkb6.mongodb.net/";
+// const MONGODB_URI = "mongodb+srv://shraddhasehrawat505:Ba@mafec-db.xolgkb6.mongodb.net/";
 
 app.use(express.json())
 app.use(cors());
@@ -29,17 +28,9 @@ db.once('open', () => {
 });
 
 const upload = multer();
-// Set up multer storage for the first image
-const firstImageStorage = multer.memoryStorage();
-const uploadFirstImage = multer({ storage: firstImageStorage }).single('image'); // 'image' is the field name for the first image
-
-// Set up multer storage for the second image
-const secondImageStorage = multer.memoryStorage();
-const uploadSecondImage = multer({ storage: secondImageStorage }).single('signature'); // 'signature' is the field name for the second image
-
 
 const generateRegistrationNumber = () => {
-  // const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; // All uppercase letters
+
   const numbers = '0123456789'; // All digits
 
   let registrationNumber = 'Y24LAW';
@@ -54,13 +45,17 @@ const generateRegistrationNumber = () => {
 
 
 
-app.post('/api/form', upload.fields([{ name: 'image' }, { name: 'signature' }]), async (req, res) => {
+app.post('/api/form', upload.fields([{ name: 'image' }, { name: 'signature' },  { name: 'identityProof' }]), async (req, res) => {
   try {
     // Handle the first image
     const imageBuffer = req.files['image'][0].buffer;
 
     // Handle the second image
     const signatureBuffer = req.files['signature'][0].buffer;
+
+    // Handle the second image
+    const identityProofBuffer = req.files['identityProof'][0].buffer;
+
 
     let registrationNumber;
     let isUnique = false;
@@ -84,48 +79,22 @@ app.post('/api/form', upload.fields([{ name: 'image' }, { name: 'signature' }]),
 
     const userData = new UserData({
       registrationNumber, firstName, lastName, email, fatherName, motherName, address, state, postalCode, centerPreference,
-      class12Percentage, stream, phoneNumber, image: imageBuffer, signature: signatureBuffer
+      class12Percentage, stream, phoneNumber, image: imageBuffer, signature: signatureBuffer, identityProof: identityProofBuffer
     });
 
     await userData.save();
 
     res.status(201).json({ message: 'Form data and images uploaded successfully.' });
   } catch (error) {
-    console.error(error); // Log the error for debugging
-    res.status(500).json({ error: error.message }); // Send the error message to the client
-  }
-});
+    //console.error(error); // Log the error for debugging
 
-//Get user data using registration
-const fs = require('fs');
-
-app.get('/api/:registrationNumber', async (req, res) => {
-  const { registrationNumber } = req.params;
-
-  try {
-    const user = await UserData.findOne({ registrationNumber });
-
-    if (user) {
-      const modifiedPdf = await modifyPdf(user);
-      const modifiedPdfBuffer = Buffer.from(modifiedPdf);
-
-      // Write the modified PDF file to disk.
-      await fs.promises.writeFile('./admit-card.pdf', modifiedPdfBuffer);
-
-      // Read the modified PDF file from disk.
-      const modifiedPdfBytes = await fs.promises.readFile('./admit-card.pdf');
-
-      // Set the content type of the response.
-      res.setHeader('Content-Type', 'application/pdf');
-
-      // Send the modified PDF file to the client.
-      res.send(modifiedPdfBytes);
-    } else {
-      res.status(404).json({ error: 'User not found from server.js' });
+    // Check if the error is a MongoDB duplicate key error (11000 code indicates duplicate key error)
+    if (error.code === 11000 && error.keyPattern && error.keyPattern.phoneNumber) {
+      // If the error is due to a duplicate phone number, send a specific error message to the client
+      return res.status(400).json({ error: 'A Student with this number is already registered' });
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal server error from server.js' });
+
+    res.status(500).json({ error: error.message }); // Send the error message to the client
   }
 });
 

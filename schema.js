@@ -2,6 +2,12 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const UserDataSchema = new Schema({
+
+  registerDate: {
+    type: Date,
+    default: Date.now // Set the default value to the current date and time
+  },
+
   registrationNumber: {
     type: String,
     unique: true, // Ensures uniqueness of registration numbers
@@ -54,6 +60,7 @@ const UserDataSchema = new Schema({
   },
   phoneNumber: {
     type: String,
+    unique: true,
     required: true
   },
   image: {
@@ -63,7 +70,12 @@ const UserDataSchema = new Schema({
   signature: {
     type: Buffer,
     // required: true
+  },
+  identityProof: {
+    type: Buffer,
+    // required: true
   }
+
 
 });
 
