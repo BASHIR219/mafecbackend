@@ -9,8 +9,8 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-// const MONGODB_URI = process.env.URL;
-const MONGODB_URI = "mongodb+srv://shraddhasehrawat505:Bashir54321@mafec-db.xolgkb6.mongodb.net/";
+const MONGODB_URI = process.env.URL;
+// const MONGODB_URI = "mongodb+srv://shraddhasehrawat505:Bash@mafec-db.xolgkb6.mongodb.net/";
 
 app.use(express.json())
 app.use(cors());
@@ -55,7 +55,7 @@ app.post('/api/form', upload.fields([{ name: 'image' }, { name: 'signature' },  
     // Handle the second image
     const signatureBuffer = req.files['signature'][0].buffer;
 
-    // Handle the second image
+    // Handle the third image
     const identityProofBuffer = req.files['identityProof'][0].buffer;
 
 
@@ -90,7 +90,7 @@ app.post('/api/form', upload.fields([{ name: 'image' }, { name: 'signature' },  
   } catch (error) {
     console.error(error); // Log the error for debugging
     //Check if the error is a MongoDB duplicate key error (11000 code indicates duplicate key error)
-    if (error.code === 11000 && error.keyPattern && error.keyPattern.phoneNumber) {
+    if (error.code === 11000) {
       // If the error is due to a duplicate phone number, send a specific error message to the client
       return res.status(400).json({ error: 'A Student with this number is already registered' });
     }
