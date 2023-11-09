@@ -20,7 +20,7 @@ const UserDataSchema = new Schema({
   },
   lastName: {
     type: String,
-    required: true
+   
   },
   email: {
     type: String,
@@ -73,15 +73,15 @@ const UserDataSchema = new Schema({
   },
   image: {
     type: Buffer,
-    // required: true
+    required: true
   },
   signature: {
     type: Buffer,
-    // required: true
+    required: true
   },
   identityProof: {
     type: Buffer,
-    // required: true
+    required: true
   }
 
 
