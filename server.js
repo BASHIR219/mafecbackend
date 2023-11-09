@@ -75,12 +75,12 @@ app.post('/api/form', upload.fields([{ name: 'image' }, { name: 'signature' },  
     }
 
     const {
-      firstName, lastName, email, fatherName, motherName, address, state, postalCode, centerPreference,
+      firstName, lastName, email, fatherName, motherName, sex, address, state, postalCode, centerPreference,coursePreference,
       class12Percentage, stream, phoneNumber
     } = req.body;
 
     const userData = new UserData({
-      registrationNumber, firstName, lastName, email, fatherName, motherName, address, state, postalCode, centerPreference,
+      registrationNumber, firstName, lastName, email, fatherName, motherName, sex, address, state, postalCode, centerPreference, coursePreference,
       class12Percentage, stream, phoneNumber, image: imageBuffer, signature: signatureBuffer, identityProof: identityProofBuffer
     });
 
@@ -99,11 +99,11 @@ app.post('/api/form', upload.fields([{ name: 'image' }, { name: 'signature' },  
   }
 });
 
-app.get('/api/form/:registrationNumber', async (req, res) =>{
+app.get('/api/form/:phoneNumber', async (req, res) =>{
 
-    const {registrationNumber} = req.params;
+    const {phoneNumber} = req.params;
     try {
-      const user = await UserData.findOne({registrationNumber});
+      const user = await UserData.findOne({phoneNumber});
       if(user){
         console.log("user details found!");
         res.json(user);
@@ -112,7 +112,7 @@ app.get('/api/form/:registrationNumber', async (req, res) =>{
         res.status(400).json({message:"user not found for this reg. number"});
       }
     } catch (error) {
-       res.status(500).json({ message: 'Internal server error in finding user.' });
+       res.status(500).json({ message:'Internal server error in finding user.' });
     }
 })
 

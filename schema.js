@@ -34,6 +34,10 @@ const UserDataSchema = new Schema({
     type: String,
     required: true
   },
+  sex: {
+    type: String,
+    required: true
+  },
   address: {
     type: String,
     required: true
@@ -47,6 +51,10 @@ const UserDataSchema = new Schema({
     required: true
   },
   centerPreference: {
+    type: String,
+    required: true
+  },
+  coursePreference: {
     type: String,
     required: true
   },
