@@ -6,11 +6,12 @@ const cors = require('cors');
 const multer = require('multer'); // For handling file uploads
 const { Buffer } = require('buffer');
 require('dotenv').config();
+const MafecPayment = require('./paymentSchema');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.URL;
-// const MONGODB_URI = "mongodb+srv://shraddhasehrawat505:Bashir4@mafec-db.xolgkb6.mongodb.net/";
+// const MONGODB_URI = "mongodb+srv://shraddhasehrawat505:Bair42@mafec-db.xolgkb6.mongodb.net/";
 
 app.use(express.json())
 app.use(cors());
@@ -115,6 +116,26 @@ app.get('/api/form/:phoneNumber', async (req, res) =>{
        res.status(500).json({ message:'Internal server error in finding user.' });
     }
 })
+
+//CHEKING PAYMENT STATUS
+app.get('/api/form/payment/:phoneNumber', async (req, res) => {
+
+  const { phoneNumber } = req.params;
+
+  try {
+    // Find user based on the provided phone number
+    const paymentData = await MafecPayment.findOne({ phone: phoneNumber });
+
+    if (!paymentData) {
+      return res.status(404).json({ message: 'Registration fee not paid. Please complete the payment.'});
+    }
+    res.json(paymentData);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error for payment' });
+  }
+});
+
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
