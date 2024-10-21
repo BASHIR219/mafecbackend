@@ -54,7 +54,7 @@ const UserDataSchema = new Schema({
     type: String,
     required: true
   },
-  coursePreference: {
+  categoryPreference: {
     type: String,
     required: true
   },
@@ -82,6 +82,9 @@ const UserDataSchema = new Schema({
   identityProof: {
     type: Buffer,
     required: true
+  },
+  EWSCertificate: {
+    type: Buffer,
   }
 
 

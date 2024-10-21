@@ -10,8 +10,8 @@ const MafecPayment = require('./paymentSchema');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGODB_URI = process.env.URL;
-// const MONGODB_URI = "mongodb+srv://shraddhasehrawat505:Bair42@mafec-db.xolgkb6.mongodb.net/";
+// const MONGODB_URI = process.env.URL;
+const MONGODB_URI = "mongodb+srv://shraddhasehrawat505:Bashir54321@mafec-db.xolgkb6.mongodb.net/";
 
 app.use(express.json())
 app.use(cors());
@@ -38,7 +38,7 @@ const generateRegistrationNumber = () => {
 
   const numbers = '0123456789'; // All digits
 
-  let registrationNumber = 'Y24LAW';
+  let registrationNumber = 'Y25LAW';
 
   // Generate the last three characters (numbers)
   for (let i = 0; i < 4; i++) {
@@ -48,7 +48,7 @@ const generateRegistrationNumber = () => {
   return registrationNumber;
 };
 
-app.post('/api/form', upload.fields([{ name: 'image' }, { name: 'signature' },  { name: 'identityProof' }]), async (req, res) => {
+app.post('/api/form', upload.fields([{ name: 'image' }, { name: 'signature' },  { name: 'identityProof' }, { name: 'EWSCertificate' }]), async (req, res) => {
   try {
     // Handle the first image
     const imageBuffer = req.files['image'][0].buffer;
@@ -58,6 +58,12 @@ app.post('/api/form', upload.fields([{ name: 'image' }, { name: 'signature' },  
 
     // Handle the third image
     const identityProofBuffer = req.files['identityProof'][0].buffer;
+
+    // Handle the fourth image
+    let EWSCertificateBuffer = null;  // Default to null for optional field
+    if (req.files['EWSCertificate']) {
+      EWSCertificateBuffer = req.files['EWSCertificate'][0].buffer;
+    }
 
 
     let registrationNumber;
@@ -76,13 +82,13 @@ app.post('/api/form', upload.fields([{ name: 'image' }, { name: 'signature' },  
     }
 
     const {
-      firstName, lastName, email, fatherName, motherName, sex, address, state, postalCode, centerPreference,coursePreference,
+      firstName, lastName, email, fatherName, motherName, sex, address, state, postalCode, centerPreference,categoryPreference,
       class12Percentage, stream, phoneNumber
     } = req.body;
 
     const userData = new UserData({
-      registrationNumber, firstName, lastName, email, fatherName, motherName, sex, address, state, postalCode, centerPreference, coursePreference,
-      class12Percentage, stream, phoneNumber, image: imageBuffer, signature: signatureBuffer, identityProof: identityProofBuffer
+      registrationNumber, firstName, lastName, email, fatherName, motherName, sex, address, state, postalCode, centerPreference, categoryPreference,
+      class12Percentage, stream, phoneNumber, image: imageBuffer, signature: signatureBuffer, identityProof: identityProofBuffer, EWSCertificate: EWSCertificateBuffer
     });
 
     await userData.save();
