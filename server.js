@@ -10,8 +10,7 @@ const MafecPayment = require('./paymentSchema');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-// const MONGODB_URI = process.env.URL;
-const MONGODB_URI = "mongodb+srv://shraddhasehrawat505:Bashir54321@mafec-db.xolgkb6.mongodb.net/";
+const MONGODB_URI = process.env.URL;
 
 app.use(express.json())
 app.use(cors());
